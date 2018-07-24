@@ -68,7 +68,7 @@ class Generator(nn.Module):
         for i in range(self.max_seq_len):
             out, h = self.forward(inp, h)               # out: num_samples x vocab_size
             out = torch.multinomial(torch.exp(out), 1)  # num_samples x 1 (sampling from each row)
-            samples[:, i] = out.data
+            samples[:, i] = out.data.squeeze(1)
 
             inp = out.view(-1)
 
