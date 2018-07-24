@@ -11,10 +11,22 @@
             "program": "${file}"
         },
         {
+            "name": "pretrain",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": [
+                "-pretrain", "1"
+            ]
+        },
+        {
             "name": "train",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/main.py"
+            "program": "${workspaceFolder}/main.py",
+            "args": [
+                "-pretrain", "0"
+            ]
         }
     ]
 }
