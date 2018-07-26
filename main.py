@@ -188,7 +188,6 @@ if __name__ == '__main__':
             print('\n--------\nEPOCH %d\n--------' % (epoch+1))
             # TRAIN GENERATOR
             print('\nAdversarial Training Generator : ', end='')
-            sys.stdout.flush()
             train_generator_PG(gen, gen_optimizer, oracle, dis, 1)
 
             # TRAIN DISCRIMINATOR
