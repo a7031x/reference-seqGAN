@@ -50,7 +50,7 @@ def train_generator_MLE(gen, gen_opt, oracle, real_data_samples, epochs):
             loss.backward()
             gen_opt.step()
 
-            total_loss += loss.data[0]
+            total_loss += loss.tolist()
 
             if (i / BATCH_SIZE) % ceil(
                             ceil(POS_NEG_SAMPLES / float(BATCH_SIZE)) / 10.) == 0:  # roughly every 10% of an epoch
@@ -162,7 +162,7 @@ if __name__ == '__main__':
         print('Starting Generator MLE Training...')
         train_generator_MLE(gen, gen_optimizer, oracle, oracle_samples, MLE_TRAIN_EPOCHS)
         torch.save(gen.state_dict(), pretrained_gen_path)
-        
+
         # PRETRAIN DISCRIMINATOR
         print('\nStarting Discriminator Training...')
         train_discriminator(dis, dis_optimizer, oracle_samples, gen, oracle, 50, 3)
