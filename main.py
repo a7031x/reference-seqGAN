@@ -120,7 +120,7 @@ def train_discriminator(discriminator, dis_opt, real_data_samples, generator, or
                 dis_opt.step()
 
                 total_loss += loss.data[0]
-                total_acc += torch.sum((out>0.5)==(target>0.5)).data[0]
+                total_acc += torch.sum((out>0.5)==(target>0.5)).tolist()
 
                 if (i / BATCH_SIZE) % ceil(ceil(2 * POS_NEG_SAMPLES / float(
                         BATCH_SIZE)) / 10.) == 0:  # roughly every 10% of an epoch
@@ -132,7 +132,7 @@ def train_discriminator(discriminator, dis_opt, real_data_samples, generator, or
 
             val_pred = discriminator.batchClassify(val_inp)
             print(' average_loss = %.4f, train_acc = %.4f, val_acc = %.4f' % (
-                total_loss, total_acc, torch.sum((val_pred>0.5)==(val_target>0.5)).data[0]/200.))
+                total_loss, total_acc, torch.sum((val_pred>0.5)==(val_target>0.5)).tolist()/200.))
 
 # MAIN
 if __name__ == '__main__':
@@ -157,16 +157,15 @@ if __name__ == '__main__':
     if opt.pretrain == 1:
         oracle_samples = helpers.batchwise_sample(oracle, POS_NEG_SAMPLES, BATCH_SIZE)
         torch.save(oracle_samples, oracle_samples_path)
+
         # GENERATOR MLE TRAINING
         print('Starting Generator MLE Training...')
         train_generator_MLE(gen, gen_optimizer, oracle, oracle_samples, MLE_TRAIN_EPOCHS)
-
         torch.save(gen.state_dict(), pretrained_gen_path)
-
+        
         # PRETRAIN DISCRIMINATOR
         print('\nStarting Discriminator Training...')
         train_discriminator(dis, dis_optimizer, oracle_samples, gen, oracle, 50, 3)
-
         torch.save(dis.state_dict(), pretrained_dis_path)
         torch.save(oracle.state_dict(), oracle_state_dict_path)
 
